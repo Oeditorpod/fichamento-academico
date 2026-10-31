@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+.DS_Store
+Thumbs.db
+# nunca publicar artigos ou fichamentos pessoais por engano
+*.pdf
+*.txt
+fichamento_*.md
