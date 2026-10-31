@@ -35,27 +35,44 @@ PDFs escaneados sem camada de texto precisam passar por OCR antes.
 
 ## Instalação
 
-Clone o repositório na sua pasta pessoal de skills. Assim ela fica disponível em todos os projetos.
+A skill é distribuída como plugin do Claude Code. Dentro de uma sessão do Claude Code, rode uma vez:
 
-macOS ou Linux:
+```text
+/plugin marketplace add Oeditorpod/fichamento-academico
+```
+
+```text
+/plugin install fichamento-academico@fichamento-academico
+```
+
+Pelo terminal, sem abrir uma sessão, os comandos equivalentes são:
 
 ```bash
-git clone https://github.com/Oeditorpod/fichamento-academico.git ~/.claude/skills/fichamento-academico
+claude plugin marketplace add Oeditorpod/fichamento-academico
+claude plugin install fichamento-academico@fichamento-academico
 ```
 
-Windows (PowerShell):
+Se o seu computador não tem chave SSH cadastrada no GitHub e a instalação falhar, defina a variável `CLAUDE_CODE_PLUGIN_PREFER_HTTPS=1` e tente de novo.
 
-```powershell
-git clone https://github.com/Oeditorpod/fichamento-academico.git "$env:USERPROFILE\.claude\skills\fichamento-academico"
+## Atualizações automáticas
+
+O Claude Code deixa a atualização automática desligada para marketplaces de terceiros. Para receber as novas versões sem precisar fazer nada, ligue uma vez:
+
+1. Rode `/plugin` numa sessão do Claude Code.
+2. Abra a aba **Marketplaces** e selecione `fichamento-academico`.
+3. Escolha **Enable auto-update**.
+
+Se preferir atualizar manualmente, rode:
+
+```text
+/plugin marketplace update fichamento-academico
 ```
 
-Para usar só em um projeto, clone em `.claude/skills/fichamento-academico` dentro da pasta do projeto.
+As mudanças são publicadas com número de versão. Você só recebe uma atualização quando a versão muda, e o histórico fica em [CHANGELOG.md](CHANGELOG.md).
 
-Também é possível instalar pelo catálogo aberto de skills:
+### Instalação manual, sem atualizações
 
-```bash
-npx skills add Oeditorpod/fichamento-academico
-```
+Para usar sem o sistema de plugins, copie a pasta `skills/fichamento-academico` deste repositório para `~/.claude/skills/`. Nesse caso as atualizações não chegam sozinhas.
 
 ## Como usar
 
@@ -68,7 +85,7 @@ Abra o Claude Code na pasta onde estão seus artigos e peça em linguagem natura
 Ou chame a skill diretamente:
 
 ```text
-/fichamento-academico artigos/silva_2024.pdf
+/fichamento-academico:fichamento-academico artigos/silva_2024.pdf
 ```
 
 Na primeira vez em cada conversa, a skill pergunta o tema da sua pesquisa para direcionar o parecer. Se você já informar o tema junto com o pedido, ela começa direto.
@@ -79,18 +96,25 @@ Os fichamentos são salvos como `fichamento_<autor>_<ano>.md`, ou dentro de uma 
 
 ```text
 fichamento-academico/
-├── SKILL.md                         instruções que o Claude segue
-├── references/
-│   ├── template.md                  modelo de saída do fichamento
-│   └── formatos-referencia.md       regras ABNT e APA para cada tipo de obra
-└── scripts/
-    └── extract_pages.py             extração de texto do PDF por página
+├── .claude-plugin/
+│   ├── marketplace.json                 catálogo lido pelo /plugin
+│   └── plugin.json                      nome e versão do plugin
+├── skills/fichamento-academico/
+│   ├── SKILL.md                         instruções que o Claude segue
+│   ├── references/
+│   │   ├── template.md                  modelo de saída do fichamento
+│   │   └── formatos-referencia.md       regras ABNT e APA por tipo de obra
+│   └── scripts/
+│       └── extract_pages.py             extração de texto do PDF por página
+├── CHANGELOG.md
+├── LICENSE
+└── README.md
 ```
 
 O script também funciona sozinho:
 
 ```bash
-python extract_pages.py artigo.pdf > artigo.txt
+python skills/fichamento-academico/scripts/extract_pages.py artigo.pdf > artigo.txt
 ```
 
 ## Limitações

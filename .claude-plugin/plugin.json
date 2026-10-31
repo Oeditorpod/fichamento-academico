@@ -1,0 +1,13 @@
+{
+  "name": "fichamento-academico",
+  "version": "1.0.0",
+  "description": "Fichamento acadêmico rigoroso de artigos em PDF: referência ABNT e APA, anatomia metodológica, citações literais com página verificada e parecer crítico.",
+  "author": {
+    "name": "Oeditorpod",
+    "url": "https://github.com/Oeditorpod"
+  },
+  "homepage": "https://github.com/Oeditorpod/fichamento-academico",
+  "repository": "https://github.com/Oeditorpod/fichamento-academico",
+  "license": "MIT",
+  "keywords": ["fichamento", "abnt", "apa", "academic-writing", "pdf", "citations"]
+}

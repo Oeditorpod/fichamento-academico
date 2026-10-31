@@ -1,0 +1,15 @@
+{
+  "name": "fichamento-academico",
+  "description": "Skills para pesquisa acadêmica de pós-graduação.",
+  "owner": {
+    "name": "Oeditorpod",
+    "url": "https://github.com/Oeditorpod"
+  },
+  "plugins": [
+    {
+      "name": "fichamento-academico",
+      "source": "./",
+      "description": "Fichamento acadêmico rigoroso de artigos em PDF, com ABNT, APA, citações com página e parecer crítico."
+    }
+  ]
+}
