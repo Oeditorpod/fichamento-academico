@@ -47,6 +47,8 @@ Decida o tipo nesta ordem e pare no primeiro sinal claro:
    - livro: editora, ISBN, ficha catalográfica, sumário com capítulos.
 3. **Formato.** EPUB → livro. HTML → notícia ou página web, a menos que seja texto de lei (Planalto, DOU, EUR-Lex) → norma. Imagem → infográfico.
 
+Se os sinais discordarem (um livro guardado em `artigos/`, um arquivo com nome sem sentido), vale a primeira página. Na dúvida entre dois tipos, escolha e marque a linha da tabela com "(conferir)".
+
 Mapa de skills: artigo, tese, dissertação, preprint → `fichar-artigo`; norma e proposta legislativa → `fichar-norma`; relatório, nota técnica, notícia, página web, infográfico, base de dados → `fichar-relatorio`; livro e capítulo de livro → `fichar-livro`.
 
 Fora do lote, com o motivo: notas de trabalho do próprio usuário (rascunhos, anotações, listas), duplicatas (mesmo conteúdo com outro nome), arquivos vazios, formatos sem leitor.

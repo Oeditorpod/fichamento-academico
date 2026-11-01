@@ -35,6 +35,8 @@ except ImportError:  # versões antigas
     import fitz as pymupdf  # type: ignore
 
 NUM_RE = re.compile(r"^(?:p\.?\s*|pág\.?\s*|página\s*|page\s*)?(\d{1,4})$", re.I)
+LABEL_RE = re.compile(r"(?:página|pág\.|page)\s*(\d{1,4})\s*$", re.I)
+RANGE_RE = re.compile(r"\bpp?\.\s*(\d{1,4})\s*[-\u2013]\s*(\d{1,4})\b")
 
 
 def dehyphenate(text):
@@ -109,10 +111,49 @@ def printed_candidates(page, clip):
                 if m:
                     nums.append(int(m.group(1)))
                     continue
-                m = re.match(r"^(\d{1,4})\s+\S", s) or re.search(r"\S\s+(\d{1,4})$", s)
-                if m and len(s) < 90:
+                # "..., ago. 2023, Página 131": rótulo explícito, vale em linha longa
+                m = LABEL_RE.search(s)
+                if m:
                     nums.append(int(m.group(1)))
+                    continue
+                # número no início ou no fim de um cabeçalho ("246  17 JULY 2020",
+                # "17 JULY 2020 VOL 369  247"); os dois entram, os vizinhos decidem
+                if len(s) < 120:
+                    for m in (re.match(r"^(\d{1,4})\s+\S", s), re.search(r"\S\s+(\d{1,4})$", s)):
+                        if m:
+                            nums.append(int(m.group(1)))
     return nums
+
+
+def range_numbers(doc, units):
+    """Plano B: o intervalo "p. 47-54" repetido no rodapé ou cabeçalho.
+
+    Se o número de páginas que trazem o intervalo bate com o tamanho dele, a
+    primeira delas é a página inicial. O resultado é estimado, nunca "lida".
+    """
+    found = []
+    for i, side, clip in units:
+        page = doc[i - 1]
+        h = clip.height
+        hit = None
+        for band in (pymupdf.Rect(clip.x0, clip.y0, clip.x1, clip.y0 + h * 0.10),
+                     pymupdf.Rect(clip.x0, clip.y1 - h * 0.10, clip.x1, clip.y1)):
+            m = RANGE_RE.search(page.get_text("text", clip=band))
+            if m:
+                hit = (int(m.group(1)), int(m.group(2)))
+        found.append(hit)
+    hits = [f for f in found if f]
+    if not hits:
+        return None
+    a, b = max(set(hits), key=hits.count)
+    idx = [k for k, f in enumerate(found) if f == (a, b)]
+    if b <= a or abs(len(idx) - (b - a + 1)) > 1:
+        return None
+    first = idx[0]
+    nums = []
+    for k in range(len(units)):
+        nums.append((a + k - first, "estimada") if a + k - first >= 1 else (k + 1, "fisica"))
+    return nums, (a, b)
 
 
 def assign_numbers(cands):
@@ -143,7 +184,8 @@ def assign_numbers(cands):
         j = i
         while j < n and (chosen[j] == chosen[i] or chosen[j] is None):
             j += 1
-        if sum(1 for k in range(i, j) if chosen[k] == chosen[i]) < 3:
+        # (em documento de 1 ou 2 páginas, basta que todas confirmem)
+        if sum(1 for k in range(i, j) if chosen[k] == chosen[i]) < min(3, n):
             for k in range(i, j):
                 chosen[k] = None
         i = j
@@ -230,6 +272,12 @@ def main():
         cands.append(printed_candidates(page, clip))
 
     numbers, seqs = assign_numbers(cands)
+    from_range = None
+    if seqs == 0:
+        r = range_numbers(doc, units)
+        if r:
+            numbers, from_range = r
+            seqs = 1
     read = sum(1 for _, s in numbers if s == "lida")
     est = sum(1 for _, s in numbers if s == "estimada")
     empty = sum(1 for t in texts if len(t.strip()) < 30)
@@ -249,7 +297,11 @@ def main():
         out.append("# NUMERAÇÃO: não detectada; páginas numeradas pela ordem (fisica)")
         conferir = True
     else:
-        out.append(f"# NUMERAÇÃO: {read} páginas com número lido, {est} estimadas")
+        if from_range:
+            out.append(f"# NUMERAÇÃO: estimada pelo intervalo p. {from_range[0]}-{from_range[1]} do rodapé ou cabeçalho"
+                       " (a primeira página com o intervalo é a inicial)")
+        else:
+            out.append(f"# NUMERAÇÃO: {read} páginas com número lido, {est} estimadas")
         if seqs > 1:
             out.append(f"# SEQUÊNCIAS DE NUMERAÇÃO: {seqs} (ex.: anexos renumerados ou falhas de leitura)")
         conferir = read < len(units) * 0.5 or seqs > 3

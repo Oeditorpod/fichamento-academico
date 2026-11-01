@@ -30,7 +30,8 @@ from pathlib import Path
 GAP = "\u0000"
 # Início de artigo: linha que começa com "Art. 12" ou "Artigo 12.º". Uma remissão
 # no meio da frase ("conforme o art. 24") não conta.
-HEAD_ART = re.compile(r"^[ \t]*(?:Art\.|Artigo)\s*(\d+)", re.M)
+# Norma que altera outra traz os artigos novos entre aspas: '"Art. 12.' ou '«Artigo 38.º'.
+HEAD_ART = re.compile(r"^[ \t\"“«']*(?:Art\.|Artigo)\s*(\d+)", re.M)
 MARK = "⟦art{}⟧"
 MARK_RE = re.compile("⟦art(\\d+)⟧")
 ELLIPSIS = re.compile(r"\[\s*\.\.\.\s*\]|\[…\]|\.\.\.|…")
@@ -42,8 +43,11 @@ def norm(s):
     s = re.sub(r"-\s*\n\s*", "", s)
     s = s.replace("“", '"').replace("”", '"').replace("’", "'").replace("‘", "'")
     s = s.replace("—", "-").replace("–", "-")
-    s = re.sub(r"\s+", " ", s)
-    return s.strip().lower()
+    s = re.sub("[​‌‍⁠﻿]", "", s)
+    # Sem espaço nenhum: há PDFs que perdem os espaços ("buttheﬁrst(andinsome")
+    # e outros que os inserem no meio da palavra.
+    s = re.sub(r"\s+", "", s)
+    return s.lower()
 
 
 def build_index(text):
@@ -63,8 +67,8 @@ def build_index(text):
             continue
         labels.append((pos, label))
         parts.append(n)
-        pos += len(n) + 1
-    return " ".join(parts), labels
+        pos += len(n)
+    return "".join(parts), labels
 
 
 def label_at(labels, idx):
@@ -109,10 +113,14 @@ def find_all(quote, plain, pos_map, labels):
         i = plain.find(pieces[0], i + 1)
     if hits:
         return hits
-    i = plain.find(pieces[0][:60])
-    if i >= 0:
-        j = pos_map[i]
-        return [("PARCIAL", label_at(labels, j), j)]
+    # Trechos de 40 caracteres ao longo da citação: acha a que cruza uma quebra
+    # de página com cabeçalho no meio, ou que tem um erro de transcrição só no começo.
+    q = "".join(pieces)
+    for k in range(0, max(1, len(q) - 39), 20):
+        i = plain.find(q[k:k + 40])
+        if i >= 0:
+            j = pos_map[i]
+            return [("PARCIAL", label_at(labels, j), j)]
     return [("NÃO ACHADA", None, -1)]
 
 
@@ -124,17 +132,25 @@ def article_at(full, idx):
     return last
 
 
-LOC = re.compile(r"^\|\s*\*\*(p\.|art\.|cap\.|s\.p\.|se[çc][ãa]o|considerando)\s*([^*|]*)\*\*\s*\|\s*(.+?)\s*\|", re.I)
+ROW = re.compile(r"^\|\s*([^|]*?)\s*\|\s*(.+?)\s*\|")
+KIND = re.compile(r"^(p\.|art\.|cap\.|s\.p\.|se[çc][ãa]o|considerando)\s*(.*)$", re.I)
 
 
 def quotes_from_fichamento(md):
+    """Linhas de tabela cuja segunda coluna tem trecho entre aspas.
+
+    O localizador da primeira coluna ("p. 4", "art. 9º", "cap. 2", "s.p.") diz o
+    que conferir; qualquer outro ("—", vazio) é tratado como s.p.
+    """
     rows = []
     for line in md.splitlines():
-        m = LOC.match(line)
-        if not m:
+        m = ROW.match(line)
+        if not m or not re.search(r'"[^"]{12,}"', m.group(2)):
             continue
-        cited = (m.group(1).lower() + " " + m.group(2).strip()).strip()
-        cell = m.group(3)
+        loc = m.group(1).strip("* ").strip()
+        k = KIND.match(loc)
+        cited = (k.group(1).lower() + " " + k.group(2).strip()).strip() if k else "s.p."
+        cell = m.group(2)
         for q in re.findall(r'"([^"]{12,})"', cell) or [cell]:
             rows.append((cited, q))
     return rows
@@ -168,6 +184,9 @@ def check(cited, quote, full, plain, pos_map, labels):
         if not want or want[0] in arts:
             return "OK", f"art. {want[0] if want else arts[0]}"
         return "ARTIGO DIVERGE", f"art. {next(a for a in arts if a)}"
+    if cited.startswith("p.") and not re.search(r"\d", cited):
+        # página em romano (prefácio, introdução): o texto extraído não a numera assim
+        return "ACHADA, PÁGINA NÃO CONFERIDA", f"física {found[0][1]}"
     if cited.startswith("p."):
         for _, page, _ in found:
             if same_page(cited, page):
