@@ -202,9 +202,15 @@ def main():
     # se a maioria das folhas largas é dupla, corta todas as largas (capas e
     # páginas de figura também ocupam meia folha), para não desalinhar a contagem
     wide = [p for p in doc if p.rect.width >= p.rect.height * 1.15]
+    # só no automático: precisa de pelo menos 4 folhas e de maioria de folhas largas
+    # com texto nas duas metades (infográficos e tabelas deitadas não são cortados)
     mode = a.duplas
-    if mode == "auto" and wide and sum(is_spread(p, "auto") for p in wide) > len(wide) * 0.5:
-        mode = "largas"
+    if mode == "auto":
+        if (len(doc) >= 4 and len(wide) > len(doc) * 0.5
+                and sum(is_spread(p, "auto") for p in wide) > len(wide) * 0.5):
+            mode = "largas"
+        else:
+            mode = "nao"
     for i, page in enumerate(doc, start=1):
         r = page.rect
         if (mode == "largas" and r.width >= r.height * 1.15) or (mode != "largas" and is_spread(page, mode)):
