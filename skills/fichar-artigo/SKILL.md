@@ -1,13 +1,12 @@
 ---
-name: fichamento-academico
+name: fichar-artigo
 description: |
-  Fichamento acadêmico rigoroso de artigos científicos (PDF ou texto) para pós-graduação stricto sensu: referência ABNT NBR 6023 e APA 7, anatomia metodológica detalhada, tabela de 5 a 10 citações literais com página exata verificada no PDF, paráfrase em PT-BR e parecer crítico de nível doutoral, em Markdown com frontmatter YAML pronto para Obsidian, Notion ou Zotero.
-  Use sempre que o usuário pedir para fichar, resumir, extrair citações, "ler" ou analisar um artigo, paper, capítulo ou tese para a própria pesquisa, mesmo sem dizer a palavra "fichamento": pedidos como "me passa os pontos principais desse PDF", "o que esse artigo diz sobre X", "tira as citações desse paper", "monta a ficha de leitura", "resume esse artigo para a minha dissertação" entram aqui. Também para fichar vários PDFs de uma pasta em lote.
-  Não use para revisão por pares simulada (parecer de periódico), para redigir o próprio artigo do usuário ou para buscar literatura nova.
-  Gatilhos: fichamento, fichar artigo, ficha de leitura, resumo de artigo, citações com página, extrair citações, anatomia metodológica, análise crítica do artigo, resenha crítica, fichar PDF, fichar pasta.
+  Ficha um artigo científico, tese, dissertação ou preprint já identificado como tal: referência ABNT e APA, anatomia metodológica com página, conceitos e dados, tabela de citações literais conferidas no PDF com versão pronta para o texto, frases-modelo de citação e parecer crítico separado.
+  Use quando o pedido nomear explicitamente um artigo, paper, tese ou dissertação a fichar, ou quando a skill "fichamento" encaminhar o arquivo para cá. Para pedidos genéricos ("ficha esta pasta", "ficha estes arquivos") use a skill fichamento, que escolhe o tipo.
+  Não use para leis e normas (fichar-norma), relatórios, notícias e infográficos (fichar-relatorio) nem livros (fichar-livro).
 license: MIT
 metadata:
-  version: "1.0.0"
+  version: "2.0.0"
 allowed-tools:
   - Read
   - Write
@@ -15,74 +14,59 @@ allowed-tools:
   - Grep
   - Glob
   - Bash
-  - AskUserQuestion
 ---
 
-# Fichamento Acadêmico Rigoroso
+# Fichar artigo, tese ou dissertação
 
-Atue como pesquisador acadêmico sênior e parecerista de periódico de alto impacto. O usuário faz pesquisa de pós-graduação e usa estes fichamentos como banco de dados confiável para redigir dissertação, tese ou artigo. Um fichamento raso ou parafraseado de forma genérica é inútil para ele. O que ele precisa é rastreabilidade absoluta (em qual página está cada afirmação), densidade técnica na seção de métodos e separação visual estrita entre o que o autor escreveu e o que é crítica sua.
+Atue como pesquisador sênior e parecerista de periódico de alto impacto. O usuário escreve dissertação, tese ou artigo e usa o fichamento como banco de dados: precisa saber em que página está cada afirmação, ter os métodos descritos com precisão e ver separado o que é do autor e o que é crítica.
 
-## Por que a página importa tanto
+**Regra que não se negocia:** nenhuma página, DOI, número ou nome de coautor entra sem ter sido lido no documento. Na falta, escreva `[página não identificada]` ou `[DOI não informado]`.
 
-O usuário vai citar o artigo em texto próprio. Uma citação com página errada ou um número inventado pode ser detectado em banca ou revisão e compromete o trabalho inteiro. Por isso a regra é: **nenhuma página, DOI, número ou nome de coautor entra no fichamento sem ter sido lido no documento.** Quando a informação não está visível, escreva `[página não identificada]` ou `[DOI não informado]`. Isso é melhor do que um palpite plausível.
+## Onde estão os recursos
 
-## Fluxo de trabalho
+A pasta desta skill aparece no topo quando ela carrega. O plugin fica dois níveis acima (`<pasta da skill>/../..`, chamado aqui de `<plugin>`), e os recursos comuns estão lá:
 
-### 1. Calibrar o foco (só na primeira interação da conversa)
+- `shared/scripts/extract_pages.py`: texto do PDF por página, com páginas duplas, duas colunas e numeração impressa.
+- `shared/scripts/extract_other.py`: DOCX, EPUB, HTML, TXT e PDF escaneado (OCR).
+- `shared/scripts/find_quote_page.py`: confere as citações do fichamento no texto extraído.
+- `shared/references/secoes-comuns.md`: status da leitura, conceitos e dados, tabela de citações, como citar, parecer, registro de mudanças. **Leia antes de escrever.**
+- `shared/references/leitura-em-blocos.md`: quando e como ler em blocos.
+- `shared/references/formatos-referencia.md`: ABNT e APA por tipo de obra.
+- `references/template.md` (nesta skill): o modelo do fichamento de artigo.
 
-Se o usuário ainda não disse qual é o tema da própria pesquisa nem o que quer do fichamento, faça no máximo duas perguntas curtas antes de processar: o tema da pesquisa e o foco desejado (fundamentação da introdução, justificativa metodológica, material para discussão). Se o PDF já veio junto com o contexto, processe imediatamente. Se a memória da sessão já registra o tema do usuário, confirme em uma linha em vez de perguntar.
+Rode os scripts com `python`, sem `-I` (o modo isolado esconde pacotes instalados na pasta do usuário).
 
-### 2. Extrair o texto com numeração de página
+## Fluxo
 
-Use o script incluído, que imprime o texto de cada página com dois números: o índice físico no PDF e, quando detectável, a numeração impressa no rodapé ou cabeçalho (a que vai na citação):
+1. **Tema da pesquisa.** Se já é conhecido (pedido, memória, skill fichamento), use. Se não, siga sem perguntar: o fichamento sai com a frase neutra e o convite para informar o tema (secoes-comuns, seção 5).
 
-```bash
-python -I <caminho-da-skill>/scripts/extract_pages.py "artigo.pdf" > artigo.txt
-```
+2. **Fichamento existente.** Se a skill fichamento não fez esta verificação, procure na pasta de saída e vizinhas um fichamento do mesmo trabalho (mesmo autor e ano, ou título parecido). Se houver, pergunte uma vez: completar (padrão), refazer em arquivo novo ou pular. Nunca sobrescreva: completar grava um arquivo novo com o registro de mudanças no fim.
 
-Depois leia o arquivo `.txt` inteiro. Para artigos longos, leia em blocos, mas leia tudo: a seção de limitações no fim da discussão é obrigatória no fichamento e costuma ficar nas últimas páginas.
+3. **Extrair.**
+   ```bash
+   python "<plugin>/shared/scripts/extract_pages.py" "artigo.pdf" --saida "artigo.txt" --amostra "<pasta temporária>"
+   ```
+   Leia o resumo impresso. Se `CONFERIR NUMERAÇÃO: sim`, abra a imagem de amostra e compare a página impressa com a estimada. Se não bater e não houver como confirmar, continue com a estimativa e registre o aviso de paginação estimada (secoes-comuns, seção 2) com o nome do arquivo, a pasta e a estimativa.
+   Para outro formato, use `extract_other.py`. Se o retorno for `NÃO LIDO`, registre o status e pare neste arquivo.
 
-Quando a numeração impressa não for detectada, cite pelo índice físico e avise no frontmatter (`paginacao: "fisica"`). Se o PDF for imagem escaneada sem texto, diga isso ao usuário e não tente adivinhar o conteúdo.
+4. **Ler tudo.** Leia o `.txt` inteiro. Se for longo, siga `leitura-em-blocos.md`. As limitações costumam estar no fim da discussão e são obrigatórias.
+   Texto em duas colunas é reordenado pelo script, mas confira no PDF (Read com `pages`) qualquer trecho que vá citar e pareça truncado.
+   Tabelas com dados que importam: extraia com pdfplumber para planilha e leia as linhas.
 
-Se o usuário colar o texto em vez de enviar PDF, trabalhe com o que há e marque páginas como `[página não identificada]` onde não aparecerem no texto colado.
+5. **Metadados e referência.** Autores, ano, título, periódico, volume, número, páginas e DOI da primeira página e do rodapé. ABNT e APA conforme `formatos-referencia.md`.
 
-### 3. Identificar metadados e montar a referência
+6. **Conteúdo.** Siga `references/template.md`. Problema, objetivo, arcabouço teórico, recorte, desenho metodológico (lócus, objeto, n, período, instrumentos, softwares e versões, testes, nível de significância), resultados com o número exato, conclusões e limitações, tudo com página. Proibido "os autores usaram métodos estatísticos"; escreva "ANOVA one-way com Tukey (p < 0,05) no R 4.2 (p. 4)".
 
-Extraia autores, ano, título, periódico, volume, número, páginas e DOI da primeira página e do rodapé. Monte a referência em ABNT (NBR 6023:2018) e APA 7. Para trabalhar com segurança nos dois estilos, consulte `references/formatos-referencia.md` quando houver dúvida (mais de três autores, capítulo de livro, preprint, documento institucional).
+7. **Conceitos, dados, citações, como citar, parecer.** Conforme `secoes-comuns.md`, seções 3 a 6. Citações *ipsis litteris*, no idioma original.
 
-### 4. Dissecar o conteúdo
+8. **Conferir as citações** antes de entregar:
+   ```bash
+   python "<plugin>/shared/scripts/find_quote_page.py" "fichamento.md" "artigo.txt"
+   ```
+   Corrija toda linha `PÁGINA DIVERGE` ou `NÃO ACHADA` (releia o trecho e copie de novo). `PARCIAL` por ruído de OCR ou quebra de coluna: confira no PDF e mantenha se estiver certo.
 
-Siga a estrutura de `references/template.md`. Os pontos que exigem mais cuidado:
-
-- **Problema e tese central.** Qual pergunta exata o artigo responde? Com página.
-- **Arcabouço teórico.** Conceitos e autores que sustentam a introdução, nomeados.
-- **Engenharia metodológica.** Lócus, objeto ou espécie, tamanho amostral (n), período, equipamentos, reagentes, softwares, testes estatísticos ou protocolos, cada um com página. Proibido escrever "os autores usaram métodos estatísticos"; escreva "ANOVA one-way seguida de Tukey (p < 0,05) no R 4.2 (p. 4)".
-- **Resultados.** Números exatos como aparecem: p-valor, R², médias, desvios, porcentagens, intervalos de confiança. Preserve a unidade e a casa decimal do original.
-
-### 5. Extrair citações literais
-
-Selecione de 5 a 10 passagens cruciais. Transcreva *ipsis litteris*, no idioma original, entre aspas. Confira cada uma contra o `.txt` extraído antes de incluir: a tentação de "melhorar" uma frase é real e é exatamente o que não pode acontecer. Para artigos em língua estrangeira, forneça logo abaixo (ou na coluna da tabela) uma paráfrase em PT-BR já no formato de citação indireta com (Autor, ano). Marque onde cada citação serve: `[Introdução]`, `[Justificativa metodológica]`, `[Comparação na discussão]`, `[Definição de conceito]`.
-
-Um detalhe prático do script: ele junta linhas quebradas por hifenização, mas pode manter quebras de coluna. Ao transcrever, reconstrua a frase na ordem lógica; se houver dúvida sobre um trecho, abra o PDF original com Read para confirmar visualmente antes de citar.
-
-### 6. Parecer crítico
-
-Esta é a parte em que você fala com voz própria, e ela precisa estar visualmente separada do relato do artigo (use o cabeçalho e o aviso do template). Avalie como parecerista de periódico Qualis A1:
-
-- Pontos fortes e contribuição efetiva.
-- Fragilidades metodológicas: viés amostral, ausência de controle, premissas não testadas, confusão entre correlação e causa, generalização além do recorte.
-- Limitações declaradas pelos próprios autores (nunca omita; cite a página).
-- Lacunas de pesquisa que o artigo abre.
-- Conexão direta com o tema do usuário: para que serve este artigo no trabalho dele, em qual seção, e o que ele não cobre.
-
-### 7. Entregar e salvar
-
-Entregue em Markdown limpo conforme `references/template.md`. Salve o arquivo na pasta do projeto do usuário com o nome `fichamento_<primeiro-autor>_<ano>.md` (ou em uma subpasta `fichamentos/` se ela existir), a menos que o usuário indique outro destino. Diga ao usuário o caminho salvo e, em uma ou duas linhas, o que mais vale a pena destacar do parecer.
-
-## Fichamento em lote
-
-Quando o usuário apontar uma pasta com vários PDFs, processe um por vez com o fluxo completo, salve um arquivo por artigo e, ao final, gere `fichamentos/_indice.md` com uma tabela: arquivo, referência curta, utilidade principal para a pesquisa do usuário. Não resuma menos para caber: cada ficha mantém a mesma densidade.
+9. **Salvar e avisar.** Nome `fichamento_<primeiro-autor>_<ano>.md` (acrescente letra se já existir, como `_2025b`), na pasta pedida ou em `fichamentos/`. Diga o caminho, o status da leitura e, em uma ou duas linhas, o ponto mais útil do parecer.
 
 ## Tom
 
-Acadêmico, analítico, impessoal, vocabulário de pós-graduação stricto sensu. Sem frases de preenchimento, sem elogios genéricos ao artigo, sem "é importante ressaltar".
+Acadêmico, analítico, impessoal. Sem frases de preenchimento, sem elogio genérico, sem "é importante ressaltar".

@@ -1,29 +1,25 @@
-# Modelo de saída do fichamento
+# Modelo do fichamento de artigo, tese ou dissertação
 
-Use exatamente esta estrutura. Troque o conteúdo entre colchetes; mantenha os cabeçalhos.
+Use esta estrutura. Troque o conteúdo entre colchetes e mantenha os cabeçalhos. As partes marcadas com (comum) seguem `shared/references/secoes-comuns.md`.
 
 ````markdown
 ---
-titulo: "[título completo original]"
-autores: ["Sobrenome, N. N.", "Sobrenome, N. N."]
-ano: [AAAA]
+[frontmatter (comum), seção 1; tipo: artigo | tese; acrescente:]
 periodico: "[nome do periódico, volume(número)]"
-doi: "[10.xxxx/xxxxx ou 'não informado']"
-idioma: "[en | pt | es ...]"
-paginacao: "[impressa | fisica]"
-tema_pesquisa_usuario: "[tema informado na calibragem]"
-tags: [fichamento, [tema1], [tema2], [metodo]]
-data_fichamento: [AAAA-MM-DD]
 ---
 
-### 1. Referência Bibliográfica
+# [Título] ([SOBRENOME, ano])
+
+### 1. Referência bibliográfica
 
 - **ABNT (NBR 6023:2018):** SOBRENOME, N.; SOBRENOME, N. Título do artigo. **Nome do Periódico**, v. X, n. Y, p. A-B, AAAA. DOI: 10.xxxx/xxxxx.
-- **APA 7:** Sobrenome, N., & Sobrenome, N. (AAAA). Título do artigo. *Nome do Periódico*, X(Y), A-B. https://doi.org/10.xxxx/xxxxx
+- **APA 7:** Sobrenome, N., & Sobrenome, N. (AAAA). Título do artigo. *Nome do Periódico*, *X*(Y), A–B. https://doi.org/10.xxxx/xxxxx
 
-### 2. Fichamento de Conteúdo e Anatomia Metodológica
+[status da leitura (comum), seção 2]
 
-> Relato fiel do artigo. Toda afirmação traz a página entre parênteses.
+### 2. Conteúdo e anatomia metodológica
+
+> Relato fiel do documento. Toda afirmação traz a página entre parênteses.
 
 - **Problema de pesquisa / pergunta central:** [...] (p. X).
 - **Objetivo geral e específicos:** [...] (p. X).
@@ -32,34 +28,40 @@ data_fichamento: [AAAA-MM-DD]
 - **Desenho metodológico:**
   - *Tipo de estudo:* [...] (p. X).
   - *Amostragem / n:* [...] (p. X).
-  - *Variáveis / instrumentos / equipamentos / reagentes:* [...] (p. X).
-  - *Análise:* [testes, modelos, softwares, versões, nível de significância] (p. X).
+  - *Dados, variáveis, instrumentos, equipamentos:* [...] (p. X).
+  - *Análise:* [testes, modelos, softwares e versões, nível de significância] (p. X).
 - **Principais resultados:**
   - [resultado com número exato, unidade e métrica] (p. X).
-  - [...]
 - **Conclusões dos autores:** [...] (p. X).
-- **Limitações declaradas pelos autores:** [...] (p. X).
+- **Limitações declaradas pelos autores:** [...] (p. X). [Se não houver: "Os autores não declaram limitações."]
 
-### 3. Fichamento de Citações Diretas e Paráfrases
+### 3. Conceitos, dados e definições
 
-| Página | Citação Literal (Original) | Paráfrase em PT-BR (citação indireta) | Aplicação Sugerida |
-| --- | --- | --- | --- |
-| **p. X** | "[transcrição ipsis litteris]" | [paráfrase com (Autor, ano)] | **[Seção]:** [para que serve] |
+[(comum), seção 3]
 
-### 4. Fichamento Crítico e Parecer Metodológico
+### 4. Citações
 
-> **Voz do parecerista.** O que segue é análise crítica, não relato do artigo.
+[tabela híbrida e "Prontas para o texto" (comum), seção 4]
+
+### 5. Como citar no texto
+
+[(comum), seção 5]
+
+### 6. Parecer crítico
+
+> **Voz do parecerista.** O que segue é análise crítica, não relato do documento.
 
 - **Rigor e contribuição:** [...]
-- **Fragilidades metodológicas e vieses:** [...] (referir a página do trecho criticado).
+- **Fragilidades metodológicas e vieses:** [...] (página do trecho criticado).
 - **Premissas questionáveis:** [...]
-- **Lacunas de pesquisa (research gaps):** [...]
-- **Conexão com a pesquisa do usuário:** [em qual seção do trabalho dele este artigo entra, o que sustenta e o que não cobre].
+- **Lacunas de pesquisa:** [...]
+- **Conexão com a pesquisa do usuário:** [seção do trabalho onde entra, o que sustenta e o que não cobre; ou "tema não informado"].
+
+[registro de mudanças (comum), seção 7, só ao completar um fichamento existente]
 ````
 
-## Notas de uso
+## Notas
 
-- Citação literal sempre no idioma original; a tradução vai só na coluna de paráfrase.
-- Números: mantenha a casa decimal e o separador do original dentro da citação literal; na paráfrase use vírgula decimal (padrão PT-BR).
-- Quando a página não for identificável: `[página não identificada]`, nunca um número estimado.
-- Se o usuário pedir formato diferente (só a tabela de citações, ou só o parecer), entregue a parte pedida sem perder a rastreabilidade de página.
+- Números: na citação literal, mantenha separador e casas do original; na paráfrase, vírgula decimal.
+- Tese ou dissertação: no lugar do periódico, use o programa e a instituição; a referência segue o modelo de tese em `formatos-referencia.md`.
+- Se o usuário pedir só uma parte (só citações, só parecer), entregue a parte pedida sem perder as páginas.

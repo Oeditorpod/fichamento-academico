@@ -6,16 +6,20 @@ Uso:
 
 O texto extraído é a saída do extract_pages.py ou do extract_other.py.
 O script lê as citações entre aspas da tabela de citações do fichamento
-(linhas que começam com "| **p." ou "| **art."), procura cada uma no texto,
-ignorando quebras de linha, hifenização e espaços, e diz em que página (ou
-seção) ela está.
+(linhas que começam com "| **p.", "| **art.", "| **cap.", "| **s.p.**",
+"| **seção" ou "| **considerando"), procura cada uma no texto, ignorando
+quebras de linha, hifenização e espaços, e diz em que página (ou artigo)
+ela está.
 
 Resultado por citação:
-- OK: achada na página indicada no fichamento.
+- OK: achada no lugar indicado no fichamento.
 - PÁGINA DIVERGE: achada, mas em outra página (mostra a certa).
+- ARTIGO DIVERGE (normas): achada, mas dentro de outro artigo (mostra qual).
 - NÃO ACHADA: não está no texto como foi transcrita (conferir no PDF;
   pode ser erro de transcrição ou de extração).
 - PARCIAL: só o início da citação foi achado.
+
+Capítulo, seção e s.p. não são conferidos: basta a citação ser achada.
 """
 import argparse
 import re
@@ -23,7 +27,13 @@ import sys
 import unicodedata
 from pathlib import Path
 
-HDR = re.compile(r"^===== (PÁGINA (\S+)|SEÇÃO: .*|CAPÍTULO .*|TEXTO.*) .*=====$|^===== (.*) =====$", re.M)
+GAP = "\u0000"
+# Início de artigo: linha que começa com "Art. 12" ou "Artigo 12.º". Uma remissão
+# no meio da frase ("conforme o art. 24") não conta.
+HEAD_ART = re.compile(r"^[ \t]*(?:Art\.|Artigo)\s*(\d+)", re.M)
+MARK = "⟦art{}⟧"
+MARK_RE = re.compile("⟦art(\\d+)⟧")
+ELLIPSIS = re.compile(r"\[\s*\.\.\.\s*\]|\[…\]|\.\.\.|…")
 
 
 def norm(s):
@@ -47,6 +57,7 @@ def build_index(text):
             m = re.match(r"===== PÁGINA (\S+)", c)
             label = m.group(1) if m else c.strip("= ").split(" | ")[0]
             continue
+        c = HEAD_ART.sub(lambda m: MARK.format(m.group(1)) + " " + m.group(0), c)
         n = norm(c)
         if not n:
             continue
@@ -65,33 +76,67 @@ def label_at(labels, idx):
     return lab
 
 
-def find(quote, full, labels):
+def pieces_of(quote):
     q = norm(quote.strip('"“” '))
-    q = re.sub(r"\[\s*\.\.\.\s*\]|\[…\]|\.\.\.|…", "\u0000", q)
-    pieces = [p.strip() for p in q.split("\u0000") if len(p.strip()) > 8]
+    q = ELLIPSIS.sub(GAP, q)
+    return [p.strip() for p in q.split(GAP) if len(p.strip()) > 8]
+
+
+def unmark(full):
+    """Texto sem as marcas de artigo, com o mapa de posições para o texto marcado."""
+    out, pos_map, i = [], [], 0
+    for m in MARK_RE.finditer(full):
+        seg = full[i:m.start()]
+        out.append(seg)
+        pos_map.extend(range(i, m.start()))
+        i = m.end() + 1 if full[m.end():m.end() + 1] == " " else m.end()
+    out.append(full[i:])
+    pos_map.extend(range(i, len(full)))
+    return "".join(out), pos_map
+
+
+def find_all(quote, plain, pos_map, labels):
+    """Todas as ocorrências: lista de (status, rótulo, posição no texto marcado)."""
+    pieces = pieces_of(quote)
     if not pieces:
-        return "CURTA", None
-    i = full.find(pieces[0])
+        return [("CURTA", None, -1)]
+    hits = []
+    i = plain.find(pieces[0])
+    while i >= 0:
+        ok = all(plain.find(p, i) >= 0 for p in pieces[1:])
+        j = pos_map[i]
+        hits.append(("ACHADA" if ok else "PARCIAL", label_at(labels, j), j))
+        i = plain.find(pieces[0], i + 1)
+    if hits:
+        return hits
+    i = plain.find(pieces[0][:60])
     if i >= 0:
-        ok = all(full.find(p, i) >= 0 for p in pieces[1:])
-        return ("ACHADA" if ok else "PARCIAL"), label_at(labels, i)
-    head = pieces[0][:60]
-    i = full.find(head)
-    if i >= 0:
-        return "PARCIAL", label_at(labels, i)
-    return "NÃO ACHADA", None
+        j = pos_map[i]
+        return [("PARCIAL", label_at(labels, j), j)]
+    return [("NÃO ACHADA", None, -1)]
+
+
+def article_at(full, idx):
+    """Número do último início de artigo antes da posição."""
+    last = None
+    for m in MARK_RE.finditer(full, 0, idx + 1):
+        last = m.group(1)
+    return last
+
+
+LOC = re.compile(r"^\|\s*\*\*(p\.|art\.|cap\.|s\.p\.|se[çc][ãa]o|considerando)\s*([^*|]*)\*\*\s*\|\s*(.+?)\s*\|", re.I)
 
 
 def quotes_from_fichamento(md):
     rows = []
     for line in md.splitlines():
-        m = re.match(r"^\|\s*\*\*(p\.|art\.)\s*([^*|]+)\*\*\s*\|\s*(.+?)\s*\|", line)
+        m = LOC.match(line)
         if not m:
             continue
-        cited = m.group(2).strip()
+        cited = (m.group(1).lower() + " " + m.group(2).strip()).strip()
         cell = m.group(3)
         for q in re.findall(r'"([^"]{12,})"', cell) or [cell]:
-            rows.append((m.group(1) + " " + cited, q))
+            rows.append((cited, q))
     return rows
 
 
@@ -106,7 +151,29 @@ def same_page(cited, found):
     except (IndexError, ValueError):
         return False
     lo, hi = int(nums[0]), int(nums[-1])
-    return lo <= f <= hi or lo - 1 <= f <= hi  # citação que começa no fim da página anterior
+    return lo - 1 <= f <= hi  # citação que começa no fim da página anterior
+
+
+def check(cited, quote, full, plain, pos_map, labels):
+    hits = find_all(quote, plain, pos_map, labels)
+    found = [h for h in hits if h[0] == "ACHADA"]
+    if not found:
+        status, page, _ = hits[0]
+        return status, page
+    if cited.startswith("art."):
+        want = re.findall(r"\d+", cited)
+        arts = [article_at(full, j) for _, _, j in found]
+        if not any(arts):  # texto sem cabeçalhos de artigo reconhecíveis
+            return "OK", found[0][1]
+        if not want or want[0] in arts:
+            return "OK", f"art. {want[0] if want else arts[0]}"
+        return "ARTIGO DIVERGE", f"art. {next(a for a in arts if a)}"
+    if cited.startswith("p."):
+        for _, page, _ in found:
+            if same_page(cited, page):
+                return "OK", page
+        return "PÁGINA DIVERGE", found[0][1]
+    return "OK", found[0][1]
 
 
 def main():
@@ -121,20 +188,22 @@ def main():
     ap.add_argument("--saida")
     a = ap.parse_args()
     full, labels = build_index(Path(a.texto).read_text(encoding="utf-8"))
+    plain, pos_map = unmark(full)
 
     if a.trecho:
-        status, page = find(a.trecho, full, labels)
-        print(f"{status}: página {page}" if page else status)
+        hits = find_all(a.trecho, plain, pos_map, labels)
+        for status, page, j in hits:
+            art = article_at(full, j) if j >= 0 else None
+            where = f"página {page}" + (f", art. {art}" if art else "") if page else ""
+            print(f"{status}: {where}" if where else status)
         return
 
     rows = quotes_from_fichamento(Path(a.fichamento).read_text(encoding="utf-8"))
     out = [f"# Conferência de citações: {Path(a.fichamento).name}", "",
-           "| Citada como | Resultado | Página encontrada | Início da citação |", "| --- | --- | --- | --- |"]
+           "| Citada como | Resultado | Encontrada em | Início da citação |", "| --- | --- | --- | --- |"]
     counts = {}
     for cited, q in rows:
-        status, page = find(q, full, labels)
-        if status == "ACHADA":
-            status = "OK" if (cited.startswith("art.") or same_page(cited, page)) else "PÁGINA DIVERGE"
+        status, page = check(cited, q, full, plain, pos_map, labels)
         counts[status] = counts.get(status, 0) + 1
         out.append(f"| {cited} | {status} | {page or '-'} | {q[:60].replace('|', '/')}… |")
     out += ["", "Resumo: " + ", ".join(f"{k}: {v}" for k, v in sorted(counts.items()))]
