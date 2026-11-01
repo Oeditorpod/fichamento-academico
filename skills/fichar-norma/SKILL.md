@@ -33,6 +33,7 @@ Atue como pesquisador com formação em direito ambiental e políticas públicas
 - **Leia o texto inteiro**, inclusive disposições finais e transitórias (prazos de vigência e revogações costumam estar lá) e anexos.
 - **Redação em vigor.** Registre de onde veio o texto lido (PDF do Diário Oficial, texto compilado do Planalto, EUR-Lex) e a data, se visível. Se o documento lido for a publicação original, avise que alterações posteriores não foram verificadas, a menos que o próprio arquivo traga a redação atualizada. Não afirme que um dispositivo está em vigor sem ter visto isso no documento ou numa fonte que o usuário forneceu.
 - **Alterações e regulamentos** citados no texto vão listados com o dispositivo onde aparecem.
+- **Norma que altera outra.** Se a norma alterada estiver entre os arquivos do usuário, leia os dispositivos alterados nela e registre o antes e o depois de cada um, citando os dois (`IN 28, art. 12` e `art. 12` na nova redação). Se não estiver, registre só a nova redação e diga que o texto anterior não foi conferido. Nunca descreva o "antes" de memória.
 - **Proposta legislativa** (PL, PEC, proposta de regulamento): `tipo: norma` e, na referência, a situação que o documento informa. Não presuma aprovação.
 - **Citações:** de 5 a 10 dispositivos-chave, literais, com o dispositivo em negrito na primeira coluna.
 - **Conferência:** `find_quote_page.py` aceita linhas `| **art. X** |` e procura o trecho no texto inteiro. Confira à mão se o trecho achado está mesmo no artigo indicado.

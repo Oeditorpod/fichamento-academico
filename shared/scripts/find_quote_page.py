@@ -31,7 +31,7 @@ GAP = "\u0000"
 # Início de artigo: linha que começa com "Art. 12" ou "Artigo 12.º". Uma remissão
 # no meio da frase ("conforme o art. 24") não conta.
 # Norma que altera outra traz os artigos novos entre aspas: '"Art. 12.' ou '«Artigo 38.º'.
-HEAD_ART = re.compile(r"^[ \t\"“«']*(?:Art\.|Artigo)\s*(\d+)", re.M)
+HEAD_ART = re.compile(r"^[ \t\"“«']*(?:Art\.?|Artigo)\s*(\d+)", re.M)
 MARK = "⟦art{}⟧"
 MARK_RE = re.compile("⟦art(\\d+)⟧")
 ELLIPSIS = re.compile(r"\[\s*\.\.\.\s*\]|\[…\]|\.\.\.|…")
