@@ -57,10 +57,38 @@ BRASIL. Ministério do Meio Ambiente. **Título do relatório**. Brasília: MMA,
 **APA 7**
 Ministério do Meio Ambiente. (2022). *Título do relatório*. https://...
 
-## Legislação
+## Legislação e normas
+
+**ABNT (lei federal)**
+BRASIL. Lei nº 12.651, de 25 de maio de 2012. Dispõe sobre a proteção da vegetação nativa. **Diário Oficial da União**: seção 1, Brasília, DF, 28 maio 2012.
+
+**ABNT (norma estadual, decreto, instrução normativa, resolução)**
+MATO GROSSO. Secretaria de Estado de Meio Ambiente. Instrução Normativa nº 1, de 10 de janeiro de 2020. Ementa. **Diário Oficial do Estado de Mato Grosso**, Cuiabá, 12 jan. 2020.
+
+**ABNT (regulamento estrangeiro ou da União Europeia)**
+UNIÃO EUROPEIA. Regulamento (UE) 2023/1115 do Parlamento Europeu e do Conselho, de 31 de maio de 2023. **Jornal Oficial da União Europeia**, L 150, p. 206-247, 9 jun. 2023.
+
+**APA 7**
+Lei nº 12.651, de 25 de maio de 2012. (2012). Dispõe sobre a proteção da vegetação nativa. *Diário Oficial da União*. URL
+
+**Citação no texto:** cite pelo dispositivo, não pela página: (BRASIL, 2012, art. 3º, II). Para a redação em vigor, indique a fonte consultada (por exemplo, texto compilado do Planalto, com data de acesso).
+
+## Página web, notícia e infográfico
 
 **ABNT**
-BRASIL. Lei nº 12.651, de 25 de maio de 2012. Dispõe sobre a proteção da vegetação nativa. **Diário Oficial da União**: seção 1, Brasília, DF, 28 maio 2012.
+SOBRENOME, P. Título da matéria. **Nome do portal**, Cidade, dia mês abreviado ano. Disponível em: URL. Acesso em: dia mês abreviado ano.
+Sem autor: TÍTULO da matéria em maiúsculas até a primeira palavra. **Nome do portal**, ...
+
+**APA 7**
+Sobrenome, P. (2024, 12 de março). *Título da matéria*. Nome do portal. URL
+
+**Citação no texto:** sem paginação, use (SOBRENOME, 2024, s.p.) ou (SOBRENOME, 2024, não paginado).
+
+## Livro digital (EPUB) e documento sem página fixa
+
+- EPUB não tem página fixa. Cite por capítulo ou seção: (SOBRENOME, 2020, cap. 3).
+- DOCX sem paginação confiável: cite por seção ou como s.p.
+- Na referência ABNT, acrescente o suporte: "E-book." ou "Documento eletrônico."
 
 ## Detalhes que costumam gerar erro
 

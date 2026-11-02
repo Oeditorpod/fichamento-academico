@@ -9,7 +9,7 @@
     {
       "name": "fichamento-academico",
       "source": "./",
-      "description": "Fichamento acadêmico rigoroso de artigos em PDF, com ABNT, APA, citações com página e parecer crítico."
+      "description": "Fichamento acadêmico de artigos, leis, relatórios e livros, com escolha automática do tipo, ABNT, APA, citações conferidas no original e parecer crítico."
     }
   ]
 }
