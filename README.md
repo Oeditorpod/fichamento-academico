@@ -183,7 +183,7 @@ Esta seção explica por que cada versão mudou, para quem chegar agora entender
 
 ### 2.0.0 (novembro de 2026): um plugin com uma skill por tipo de documento
 
-**Por que mudou.** A versão 1.0.0 foi usada para refazer os 65 fichamentos das referências de um trabalho de mestrado (artigos, leis, relatórios e livros). A comparação com os fichamentos feitos antes, à mão e com orientação passo a passo, mostrou que os da skill saíam menos completos: cerca de metade do texto, menos referências de página e sem as seções que o autor mais usava na hora de escrever. Ficaram claros seis problemas:
+**Por que mudou.** A versão 1.0.0 foi usada para refazer os 65 fichamentos das referências de um artigo (artigos, leis, relatórios e livros). A comparação com os fichamentos feitos antes, à mão e com orientação passo a passo, mostrou que os da skill saíam menos completos: cerca de metade do texto, menos referências de página e sem as seções que o autor mais usava na hora de escrever. Ficaram claros seis problemas:
 
 1. **Um modelo só para tudo.** O modelo era de artigo científico. Em lei, "desenho metodológico" não faz sentido; em relatório, o que importa é quem produziu e de onde vem cada número; em livro, o capítulo. Daí a divisão em skills por tipo, com uma porta de entrada que escolhe sozinha.
 2. **Faltavam seções úteis na redação.** "Conceitos, dados e definições" e "Como citar no texto" existiam nos fichamentos manuais e não no modelo. Voltaram, e a tabela de citações ganhou a linha pronta para o texto. Quando o tema da pesquisa não é informado, as frases saem neutras, sem parar o trabalho para perguntar.
