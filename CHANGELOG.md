@@ -2,6 +2,10 @@
 
 O porquê de cada versão está no [README](README.md#histórico-de-versões). Aqui fica a lista do que mudou.
 
+## 2.0.1 (2026-11-02)
+
+- Exemplos das regras e modelos trocados por exemplos neutros, sem ligação com um tema de pesquisa específico.
+
 ## 2.0.0 (2026-11-01)
 
 Mudanças que quebram o uso anterior:
