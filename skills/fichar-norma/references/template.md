@@ -7,7 +7,7 @@ As partes marcadas com (comum) seguem `shared/references/secoes-comuns.md`.
 [frontmatter (comum), seção 1; tipo: norma; paginacao: "por artigo"; acrescente:]
 especie: "[lei | decreto | MP | instrução normativa | portaria | resolução | regulamento UE | projeto de lei]"
 numero: "[nº e data]"
-orgao_emissor: "[Congresso Nacional | Presidência | SEMA-MT | Parlamento Europeu e Conselho ...]"
+orgao_emissor: "[Congresso Nacional | Presidência | secretaria estadual | Parlamento Europeu e Conselho ...]"
 texto_lido: "[publicação original | texto compilado | consolidado EUR-Lex], [fonte], [data se visível]"
 ---
 

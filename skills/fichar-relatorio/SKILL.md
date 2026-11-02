@@ -30,7 +30,7 @@ Atue como pesquisador que usa literatura cinzenta com cautela. Relatórios de ON
 ## O que é próprio deste tipo
 
 - **Autoria e interesse.** Quem produziu (órgão, ONG, associação setorial, empresa, consultoria), quem financiou, se declarado, e qual posição o documento defende. Separe o que o documento declara do que você infere.
-- **Proveniência de cada número.** Para cada dado-chave: valor, unidade, recorte, ano de referência, fonte primária (ex.: "SINAFLOR, extração em mar/2024") e página. Se o documento não diz a fonte, escreva "fonte não informada".
+- **Proveniência de cada número.** Para cada dado-chave: valor, unidade, recorte, ano de referência, fonte primária (ex.: "IBGE, PNAD Contínua, 2º tri. 2024") e página. Se o documento não diz a fonte, escreva "fonte não informada".
 - **Metodologia.** Em relatório: período, área, base de dados, método de cálculo, limitações. Em notícia: quem é a fonte ouvida e se o dado vem de documento identificável.
 - **Datas.** Data de publicação e data de referência dos dados podem diferir; registre as duas.
 - **Tamanho proporcional.** Relatório longo segue o modelo inteiro; notícia ou infográfico usam a versão curta do modelo (de 2 a 5 citações).
@@ -39,4 +39,4 @@ Atue como pesquisador que usa literatura cinzenta com cautela. Relatórios de ON
 
 ## Tom
 
-Analítico. Atribua sempre: "segundo o Imazon (2023, p. 4)", nunca o dado solto como fato.
+Analítico. Atribua sempre: "segundo o Ipea (2023, p. 4)", nunca o dado solto como fato.

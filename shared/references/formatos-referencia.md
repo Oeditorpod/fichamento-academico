@@ -60,18 +60,18 @@ Ministério do Meio Ambiente. (2022). *Título do relatório*. https://...
 ## Legislação e normas
 
 **ABNT (lei federal)**
-BRASIL. Lei nº 12.651, de 25 de maio de 2012. Dispõe sobre a proteção da vegetação nativa. **Diário Oficial da União**: seção 1, Brasília, DF, 28 maio 2012.
+BRASIL. Lei nº 9.394, de 20 de dezembro de 1996. Estabelece as diretrizes e bases da educação nacional. **Diário Oficial da União**: seção 1, Brasília, DF, 23 dez. 1996.
 
 **ABNT (norma estadual, decreto, instrução normativa, resolução)**
-MATO GROSSO. Secretaria de Estado de Meio Ambiente. Instrução Normativa nº 1, de 10 de janeiro de 2020. Ementa. **Diário Oficial do Estado de Mato Grosso**, Cuiabá, 12 jan. 2020.
+ESTADO. Secretaria de Estado de [área]. Resolução nº [número], de [dia] de [mês] de [ano]. [Ementa]. **Diário Oficial do Estado de [nome]**, [cidade], [data de publicação].
 
 **ABNT (regulamento estrangeiro ou da União Europeia)**
-UNIÃO EUROPEIA. Regulamento (UE) 2023/1115 do Parlamento Europeu e do Conselho, de 31 de maio de 2023. **Jornal Oficial da União Europeia**, L 150, p. 206-247, 9 jun. 2023.
+UNIÃO EUROPEIA. Regulamento (UE) 2016/679 do Parlamento Europeu e do Conselho, de 27 de abril de 2016. **Jornal Oficial da União Europeia**, L 119, p. 1-88, 4 maio 2016.
 
 **APA 7**
-Lei nº 12.651, de 25 de maio de 2012. (2012). Dispõe sobre a proteção da vegetação nativa. *Diário Oficial da União*. URL
+Lei nº 9.394, de 20 de dezembro de 1996. (1996). Estabelece as diretrizes e bases da educação nacional. *Diário Oficial da União*. URL
 
-**Citação no texto:** cite pelo dispositivo, não pela página: (BRASIL, 2012, art. 3º, II). Para a redação em vigor, indique a fonte consultada (por exemplo, texto compilado do Planalto, com data de acesso).
+**Citação no texto:** cite pelo dispositivo, não pela página: (BRASIL, 1996, art. 4º, I). Para a redação em vigor, indique a fonte consultada (por exemplo, texto compilado do Planalto, com data de acesso).
 
 ## Página web, notícia e infográfico
 

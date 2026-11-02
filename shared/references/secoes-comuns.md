@@ -59,7 +59,7 @@ Tabela com quatro colunas e, abaixo, a forma pronta de cada citação:
 | **p. 2** | "[trecho exato, no idioma original]" | [tradução fiel, se estrangeira; paráfrase, se em português] | **[Seção do trabalho]:** [para que serve] |
 
 > **Prontas para o texto**
-> - p. 2: Em vistorias no Pará, apenas 61% das árvores registradas como ipê eram de fato ipê (BRANCALION et al., 2018, p. 2).
+> - p. 2: Segundo os autores, [dado com número, unidade e recorte] (SOBRENOME et al., 2021, p. 2).
 > - ...
 ```
 

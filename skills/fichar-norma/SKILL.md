@@ -18,7 +18,7 @@ allowed-tools:
 
 # Fichar lei ou norma
 
-Atue como pesquisador com formação em direito ambiental e políticas públicas. O usuário vai citar a norma no próprio trabalho, então o que importa é dizer com exatidão o que cada dispositivo manda, a partir de quando e para quem.
+Atue como pesquisador com formação em direito e políticas públicas. O usuário vai citar a norma no próprio trabalho, então o que importa é dizer com exatidão o que cada dispositivo manda, a partir de quando e para quem.
 
 `<plugin>` é a pasta dois níveis acima desta skill. Antes de escrever, leia:
 
@@ -40,4 +40,4 @@ Atue como pesquisador com formação em direito ambiental e políticas públicas
 
 ## Tom
 
-Técnico e preciso. Use os termos da norma ("operador", "devida diligência", "plano de manejo") como ela os define.
+Técnico e preciso. Use os termos da norma ("controlador", "fornecedor", "titular") como ela os define.
