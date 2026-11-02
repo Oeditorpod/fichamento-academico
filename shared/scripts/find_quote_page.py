@@ -113,11 +113,12 @@ def find_all(quote, plain, pos_map, labels):
         i = plain.find(pieces[0], i + 1)
     if hits:
         return hits
-    # Trechos de 40 caracteres ao longo da citação: acha a que cruza uma quebra
-    # de página com cabeçalho no meio, ou que tem um erro de transcrição só no começo.
+    # Trechos de 30 caracteres ao longo da citação: acha a que cruza uma quebra
+    # de página com cabeçalho no meio, ou que tem ruído de OCR ou erro de transcrição
+    # num ponto só.
     q = "".join(pieces)
-    for k in range(0, max(1, len(q) - 39), 20):
-        i = plain.find(q[k:k + 40])
+    for k in range(0, max(1, len(q) - 29), 10):
+        i = plain.find(q[k:k + 30])
         if i >= 0:
             j = pos_map[i]
             return [("PARCIAL", label_at(labels, j), j)]
